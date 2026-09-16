@@ -1,0 +1,6 @@
+.gain{position:fixed;left:16px;bottom:16px;z-index:18;background:linear-gradient(180deg,#2a2316,#16130e);border:1px solid #c9963a;border-radius:18px;padding:12px 16px;min-width:160px}
+.gain b{display:block;font-size:22px;color:#efc56a}
+.gain span{display:block;font-size:12px;color:#9a9286}
+.coins{position:fixed;inset:0;pointer-events:none;z-index:12;overflow:hidden}
+.coins i{position:absolute;top:-20px;color:#efc56a;font-style:normal;animation:fall 4.5s linear infinite}
+@keyframes fall{0%{transform:translateY(-10vh)}100%{transform:translateY(110vh);opacity:.2}}
