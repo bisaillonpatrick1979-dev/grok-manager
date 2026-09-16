@@ -1,12 +1,12 @@
 # Grok Manager
 
-App de gestion chantier — deux portails (admin / employé), punch GPS, catalogue 3 prix, devis/contrats/factures, outils.
+App de gestion de chantier (deux portails, punch GPS, catalogue 3 prix, devis/factures, outils).
 
-Ouvre `index.html` ou déploie le dossier.
-
-Comptes démo :
+## Demo
 - admin / admin
-- comptable / demo
 - secretaire / demo
 - employe / demo
 - soustraitant / demo
+
+Ouvre `index.html` ou le déploiement Vercel.
+Les données restent dans le navigateur (localStorage).
