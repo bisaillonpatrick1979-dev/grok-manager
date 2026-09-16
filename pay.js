@@ -1,29 +1,6 @@
-(function () {
-  function money(n) {
-    try { return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(+n || 0); }
-    catch (e) { return '$' + (+n || 0).toFixed(2); }
-  }
-  function tick() {
-    if (typeof USER === 'undefined' || !USER || USER.portal !== 'staff') return;
-    var taux = USER.taux || 0;
-    var start = new Date(); start.setHours(0,0,0,0);
-    var mine = (typeof DB !== 'undefined' && DB.punches) ? DB.punches.filter(function (p) { return p.qui === USER.name && p.in >= start.getTime(); }) : [];
-    var open = mine.filter(function (p) { return !p.out; })[0];
-    var h = 0, dol = 0;
-    mine.forEach(function (p) {
-      if (p.out) { h += p.heures || 0; dol += p.gain != null ? p.gain : (p.heures || 0) * taux; }
-    });
-    if (open) { var live = (Date.now() - open.in) / 3600000; h += live; dol += live * taux; }
-    var el = document.getElementById('gain-bubble');
-    if (!el) { el = document.createElement('div'); el.id = 'gain-bubble'; el.className = 'gain'; document.body.appendChild(el); }
-    el.innerHTML = '<b>' + money(dol) + '</b><span>' + h.toFixed(2) + ' h aujourd\'hui</span>' + (open ? '<span class="badge ok">en cours</span>' : '');
-    var coins = document.getElementById('coins-live');
-    if (open && !coins) {
-      coins = document.createElement('div'); coins.id = 'coins-live'; coins.className = 'coins';
-      coins.innerHTML = [0,1,2,3,4,5,6,7].map(function (i) { return '<i style="left:' + (10+i*11) + '%;animation-delay:' + (i*0.4) + 's">\u25cf</i>'; }).join('');
-      document.body.appendChild(coins);
-    }
-    if (!open && coins) coins.remove();
-  }
-  setInterval(tick, 1000);
+(function(){
+function money(n){try{return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD'}).format(+n||0)}catch(e){return '$'+(+n||0).toFixed(2)}}
+function bindDrag(el,key){if(el._dragOk)return;el._dragOk=true;el.style.cursor='grab';var saved=JSON.parse(localStorage.getItem(key)||'null');if(saved){el.style.left=saved.x+'px';el.style.top=saved.y+'px';el.style.right='auto';el.style.bottom='auto';}var sx,sy,ox,oy;function pt(e){var t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY}}function down(e){var p=pt(e),r=el.getBoundingClientRect();sx=p.x;sy=p.y;ox=r.left;oy=r.top;window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:false});window.addEventListener('mouseup',up);window.addEventListener('touchend',up)}function move(e){var p=pt(e);if(e.cancelable)e.preventDefault();el.style.left=Math.max(8,ox+p.x-sx)+'px';el.style.top=Math.max(8,oy+p.y-sy)+'px';el.style.right='auto';el.style.bottom='auto'}function up(){window.removeEventListener('mousemove',move);window.removeEventListener('touchmove',move);window.removeEventListener('mouseup',up);window.removeEventListener('touchend',up);var r=el.getBoundingClientRect();localStorage.setItem(key,JSON.stringify({x:r.left,y:r.top}))}el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:true})}
+function tick(){if(typeof USER==='undefined'||!USER||USER.portal!=='staff')return;var taux=USER.taux||0,start=new Date();start.setHours(0,0,0,0);var mine=(typeof DB!=='undefined'&&DB.punches)?DB.punches.filter(function(p){return p.qui===USER.name&&p.in>=start.getTime()}):[];var open=mine.filter(function(p){return!p.out})[0];var h=0,dol=0;mine.forEach(function(p){if(p.out){h+=p.heures||0;dol+=p.gain!=null?p.gain:(p.heures||0)*taux}});if(open){var live=(Date.now()-open.in)/3600000;h+=live;dol+=live*taux}var el=document.getElementById('gain-bubble');if(!el){el=document.createElement('div');el.id='gain-bubble';el.className='gain';document.body.appendChild(el);bindDrag(el,'gm.gain.pos')}el.innerHTML='<b>'+money(dol)+'</b><span>'+h.toFixed(2)+" h aujourd'hui</span>"+(open?'<span class="badge ok">en cours</span>':'');var coins=document.getElementById('coins-live');if(open&&!coins){coins=document.createElement('div');coins.id='coins-live';coins.className='coins';coins.innerHTML=[0,1,2,3,4,5,6,7].map(function(i){return '<i style="left:'+(10+i*11)+'%;animation-delay:'+(i*0.4)+'s">\u25cf</i>'}).join('');document.body.appendChild(coins)}if(!open&&coins)coins.remove()}
+setInterval(tick,1000);
 })();
